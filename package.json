@@ -1,6 +1,6 @@
 {
   "name": "pi-smart",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Pi extension for output filtering, compression, analyze tool, and cost tracking",
   "author": "baphuongna",
   "license": "MIT",
