@@ -63,12 +63,6 @@ export function registerPiSmart(pi: ExtensionAPI): void {
 		currentCtx = undefined;
 	});
 
-	// --- Cost tracking via provider response ---
-	pi.on("after_provider_response", () => {
-		const state = sessionState;
-		if (!state || !state.config.enabled || !state.config.cost.enabled) return;
-		// Token usage extracted from message_end usage field
-	});
 
 	// --- Assistant response compression ---
 	pi.on("message_end", (event) => {
