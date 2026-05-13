@@ -22,7 +22,7 @@
   ],
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "test": "node --experimental-strip-types --test --test-concurrency=1 --test-timeout=30000 test/unit/*.test.ts",
+    "test": "npx tsx --test --test --test-concurrency=1 --test-timeout=30000 test/unit/*.test.ts",
     "ci": "npm run typecheck && npm test"
   },
   "pi": {
@@ -51,6 +51,7 @@
   },
   "devDependencies": {
     "@mariozechner/pi-coding-agent": "^0.65.0",
+    "tsx": "^4.21.0",
     "typescript": "^5.9.3"
   }
 }
