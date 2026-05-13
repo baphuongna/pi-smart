@@ -1,25 +1,38 @@
 # pi-smart
 
-Extension for Pi coding agent.
+Context optimization extension for Pi coding agent — output filtering, compression, cost tracking, and analyze tool.
+
+## Features
+
+- **Token Compression** - Caveman compression reduces output by ~75%
+- **Output Filtering** - Strip ANSI, collapse blanks, path shortening
+- **Cost Tracking** - Track token usage and API costs
+- **Analyze Tool** - Write scripts to analyze data instead of reading into context
+- **Correction Detection** - Detect when agent makes corrections mid-turn
+- **Failure Injection** - Intentional failures for testing robustness
 
 ## Install
-
-### From npm (recommended)
 
 ```bash
 pi install npm:pi-smart
 ```
 
-### From GitHub Packages
+## Usage
 
+### Enable Compression
 ```bash
-pi install npm:@baphuongna/pi-smart
+/smart compress on
 ```
 
-### From local source (development)
-
+### Track Costs
 ```bash
-cd pi-smart && pi install .
+/smart cost
+```
+
+### Analyze Data
+```bash
+# Use the analyze tool in your coding agent
+# Instead of reading 50 files, write a script that console.logs the result
 ```
 
 ## Verify
