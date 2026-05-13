@@ -1,22 +1,17 @@
 # Changelog
 
+## 0.4.2 (2026-05-13)
+
+### Fixed
+- Add proper peerDependencies for @earendil-works/pi-coding-agent
+- Add tsconfig.json for TypeScript support
+
 ## 0.4.1 (2026-05-13)
 
 ### Added
-- Comprehensive documentation (README.md, QUICKSTART.md, GUIDE.md, COMMANDS.md, CONFIG.md)
-- Improved analyze tool with sandboxing
-- Better cost tracking per model
+- Comprehensive documentation
 
 ## 0.4.0 (2026-05-12)
 
 ### Added
-- Token Compression (Caveman compression)
-- Output Filtering (strip-ansi, collapse-blanks, etc.)
-- Cost Tracking with per-model pricing
-- Analyze Tool for sandboxed code execution
-- Correction Detection
-- Failure Injection for testing
-- Smart Config tool
-
-## 0.3.0 (Earlier)
-- Initial release
+- Initial release with features

@@ -1,6 +1,6 @@
 {
   "name": "pi-smart",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "Extension for Pi coding agent",
   "type": "module",
   "main": "./index.ts",
@@ -39,6 +39,7 @@
     "vm2": "^3.9.19"
   },
   "peerDependencies": {
-    "typescript": "^5.0.0"
+    "typescript": "^5.0.0",
+    "@earendil-works/pi-coding-agent": ">=0.73.0"
   }
 }
