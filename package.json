@@ -1,6 +1,6 @@
 {
-  "name": "@baphuongna/pi-smart",
-  "version": "0.4.0",
+  "name": "pi-smart",
+  "version": "0.4.1",
   "description": "Extension for Pi coding agent",
   "type": "module",
   "main": "./index.ts",

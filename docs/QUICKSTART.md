@@ -8,67 +8,92 @@ pi install npm:pi-smart
 
 ## Basic Usage
 
-### Learn About Topic
+### 1. Enable Compression
 
 ```bash
-# In your coding agent
-/learn authentication
+# Set to terse mode (max compression)
+/smart-intensity terse
+
+# Set to normal mode
+/smart-intensity normal
+
+# Set to verbose mode (no compression)
+/smart-intensity verbose
 ```
 
-### Search Knowledge Base
+### 2. Configure Filters
 
 ```bash
-/search JWT implementation
+# Enable/disable specific filters
+smart_config action="set" key="filters.stripAnsi" value="true"
+smart_config action="set" key="filters.collapseBlanks" value="true"
 ```
 
-### Compress Output
+### 3. Check Costs
 
 ```bash
-/compress full
+# View total cost
+smart_config action="get" key="cost.total"
+
+# View per-model cost
+smart_config action="get" key="cost.byModel"
+
+# Reset cost counter
+smart_config action="reset" key="cost"
 ```
 
-### Analyze Code
+### 4. Analyze Data
+
+Instead of reading 50 files, write a script:
 
 ```bash
-/analyze src/auth.ts
+# Analyze JavaScript/TypeScript
+analyze language="javascript" code="
+const files = ['file1.ts', 'file2.ts'];
+console.log(files.length);
+"
+
+# Analyze Python
+analyze language="python" code="print('hello')"
+
+# Analyze Shell
+analyze language="shell" code="ls -la | wc -l"
 ```
 
-## Goal Analysis
+## Compression Levels
 
-```typescript
-import { analyzeGoal } from 'pi-smart';
+### Terse Mode
+- Maximum compression
+- Shortens paths
+- Collapses whitespace
+- Removes ANSI codes
+- ~75% size reduction
 
-const result = analyzeGoal('Implement JWT authentication');
-// → { intent: 'implement', complexity: 'medium', roles: ['executor'] }
+### Normal Mode
+- Balanced compression
+- Preserves readability
+- ~50% size reduction
+
+### Verbose Mode
+- No compression
+- Full context preserved
+- Useful for debugging
+
+## Filter Types
+
+| Filter | Description |
+|--------|-------------|
+| `stripAnsi` | Remove ANSI color codes |
+| `collapseBlanks` | Collapse multiple blank lines |
+| `shortenPaths` | Shorten file paths |
+| `truncate` | Truncate long outputs |
+| `headTail` | Keep first/last N lines |
+
+## Budget Tracking
+
+```bash
+# Set budget thresholds (percentages)
+smart_config action="set" key="budget.thresholds" value="[60, 80, 90]"
+
+# When budget exceeded, compression auto-intensifies
 ```
-
-## Token Compression
-
-```typescript
-import { compressText } from 'pi-smart';
-
-// Full compression (~50%)
-const compressed = compressText(longText, 'full');
-
-// Ultra compression (~75%)
-const ultra = compressText(longText, 'ultra');
-```
-
-## I18n
-
-```typescript
-import { t, setLocale } from 'pi-smart';
-
-// Use Vietnamese
-setLocale('vi');
-console.log(t('greeting'));  // "Xin chào"
-
-// Use Spanish
-setLocale('es');
-console.log(t('greeting'));  // "Hola"
-```
-
-## Next Steps
-
-- Read [API.md](API.md) for full API reference
-- Check [SPEC.md](../SPEC.md) for feature details
