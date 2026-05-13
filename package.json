@@ -1,6 +1,6 @@
 {
   "name": "@baphuongna/pi-smart",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Pi extension for output filtering, compression, analyze tool, and cost tracking",
   "type": "module",
   "main": "./dist/index.js",
