@@ -1,30 +1,46 @@
-# pi-smart Development Notes
+# pi-smart Agent Operating Guide
 
-Pi extension for output filtering, compression, analyze tool, and cost tracking.
+## Extension Purpose
 
-## Rules
+pi-smart provides context optimization, token compression, output filtering, and cost tracking for Pi coding agents. It helps manage context window usage and reduce costs.
 
-- Keep `index.ts` minimal; register functionality from `src/extension/register.ts`.
-- Prefer small modules over large orchestrator files.
-- Avoid `any`; use `unknown` plus validation for tool/config inputs.
-- Filter pipeline must be safe: skip on error, log, pass through.
-- Sandbox execution must strip dangerous env vars, block network by default, enforce timeout.
-- Budget state machine transitions must be explicit and configurable.
-- After code changes, run `npm test` from `pi-smart/` unless explicitly told not to.
+## Source Of Truth
 
-## Important commands
+1. `README.md` for extension overview.
+2. `docs/HARNESS.md` for the human-agent operating model.
+3. `docs/FEATURE_INTAKE.md` before turning any request into work.
+4. `docs/ARCHITECTURE.md` before proposing implementation changes.
+5. `docs/product/` for current product contracts.
+6. `docs/stories/` for story packets and backlog.
+7. `docs/TEST_MATRIX.md` for proof status.
+8. `docs/decisions/` for why important choices were made.
+
+## Extension Capabilities
+
+### Core Tools
+- `smart_config` - Runtime configuration management
+- `analyze` - Write scripts to analyze data
+- `token_compressor` - Caveman-style compression
+- `output_filter` - Strip ANSI, collapse blanks, shorten paths
+
+### Commands
+- `/smart-intensity` - Set compression intensity
+- `/smart-filters` - Configure output filters
+- `/smart-budget` - Set context budget thresholds
+- `/smart-cost` - Show cost tracking
+
+## Validation Commands
 
 ```bash
-npm test
-npm run typecheck
+npm test                    # Unit tests
+npm run lint               # Lint checks
+npx tsc --noEmit          # TypeScript type check
 ```
 
-## Important paths
+## Done Definition
 
-- `src/extension/register.ts` — main registration + hooks
-- `src/filter/` — filter pipeline and 12 filters
-- `src/compress/` — caveman compression engine
-- `src/analyze/` — analyze tool + sandbox
-- `src/budget/` — context budget state machine
-- `src/cost/` — token cost tracking + pricing
-- `src/config.ts` — config loader
+A task is done when:
+- The requested change is completed or the blocker is documented.
+- Relevant docs, stories, and test matrix entries remain current.
+- Validation commands were run when they exist.
+- Missing harness capabilities were added to `docs/HARNESS_BACKLOG.md`.
