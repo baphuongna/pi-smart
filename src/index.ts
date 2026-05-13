@@ -10,3 +10,6 @@ export { createCorrectionDetector, CORRECTION_STRONG_PATTERNS, CORRECTION_WEAK_P
 
 // Failure injection exports
 export { createFailureInjector, type FailureEntry, type FailureInjectionConfig } from './memory/failure-injector.js';
+
+// Caveman compression exports
+export { compressCaveman, getCompressionStats, SHORTEN_MAP, PRESERVE_PATTERNS } from './compress/caveman-rules.js';
