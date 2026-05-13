@@ -3,7 +3,7 @@
 ## Installation
 
 ```bash
-npm install pi-smart
+pi install npm:pi-smart
 ```
 
 ## Basic Usage
