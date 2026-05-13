@@ -1,57 +1,41 @@
 {
   "name": "pi-smart",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Pi extension for output filtering, compression, analyze tool, and cost tracking",
-  "author": "baphuongna",
-  "license": "MIT",
   "type": "module",
-  "keywords": [
-    "pi-package",
-    "pi",
-    "pi-coding-agent",
-    "smart",
-    "filter",
-    "compression",
-    "cost-tracking"
-  ],
-  "files": [
-    "*.ts",
-    "src/**/*.ts",
-    "skills/**/*",
-    "AGENTS.md"
-  ],
-  "scripts": {
-    "typecheck": "tsc --noEmit",
-    "test": "npx tsx --test --test --test-concurrency=1 --test-timeout=30000 test/unit/*.test.ts",
-    "ci": "npm run typecheck && npm test"
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
   },
+  "scripts": {
+    "build": "tsc --noEmitOnError false",
+    "typecheck": "tsc --noEmit",
+    "test": "npx tsx --test --test-concurrency=1 --test-timeout=30000 test/unit/*.test.ts"
+  },
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "pi",
+    "coding-agent",
+    "extension"
+  ],
+  "author": "BaphuongNA",
+  "license": "MIT",
   "pi": {
     "extensions": [
       "./index.ts"
-    ],
-    "skills": [
-      "./skills"
     ]
   },
   "peerDependencies": {
-    "@mariozechner/pi-agent-core": "*",
-    "@mariozechner/pi-ai": "*",
-    "@mariozechner/pi-coding-agent": "*"
-  },
-  "peerDependenciesMeta": {
-    "@mariozechner/pi-agent-core": {
-      "optional": true
-    },
-    "@mariozechner/pi-ai": {
-      "optional": true
-    },
-    "@mariozechner/pi-coding-agent": {
-      "optional": true
-    }
+    "typescript": "^5.0.0"
   },
   "devDependencies": {
-    "@mariozechner/pi-coding-agent": "^0.65.0",
-    "tsx": "^4.21.0",
-    "typescript": "^5.9.3"
+    "tsx": "^4.19.0"
   }
 }
