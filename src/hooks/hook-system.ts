@@ -4,16 +4,35 @@
  */
 
 export type HookName = 
+  // Lifecycle hooks
+  | 'SessionStart'
+  | 'UserPromptSubmit'
+  | 'PreToolUse'
+  | 'PostToolUse'
+  | 'PreCompact'
+  | 'Stop'
+  | 'Subagent'
+  | 'SessionEnd'
+  | 'Notification'
+  | 'TaskCompleted'
+  | 'PostToolUseFailure'
+  | 'PreLlmContext'
+  // Context hooks
   | 'context.filter'
   | 'context.enrich'
   | 'context.compress'
   | 'context.evaluate'
+  // Query hooks
   | 'query.analyze'
   | 'query.search'
+  // Search hooks
   | 'search.rank'
+  // Sandbox hooks
   | 'sandbox.evaluate'
+  // Memory hooks
   | 'memory.store'
   | 'memory.retrieve'
+  // Index hooks
   | 'index.update'
   | 'index.query';
 
@@ -284,3 +303,141 @@ export const SEARCH_RANK_HOOK: HookDefinition = {
     return { outcome: 'allow' };
   }
 };
+
+// --- Lifecycle hooks (predefined) ---
+
+export const SESSION_START_HOOK: HookDefinition = {
+  name: 'SessionStart',
+  mode: 'non-blocking',
+  description: 'Fires when a new session begins',
+  priority: 10,
+  handler: async (ctx) => {
+    return { outcome: 'allow' };
+  }
+};
+
+export const USER_PROMPT_SUBMIT_HOOK: HookDefinition = {
+  name: 'UserPromptSubmit',
+  mode: 'non-blocking',
+  description: 'Fires after user submits a prompt, before processing',
+  priority: 20,
+  handler: async (ctx) => {
+    return { outcome: 'allow' };
+  }
+};
+
+export const PRE_TOOL_USE_HOOK: HookDefinition = {
+  name: 'PreToolUse',
+  mode: 'blocking',
+  description: 'Fires before a tool is invoked; can block or modify',
+  priority: 30,
+  handler: async (ctx) => {
+    return { outcome: 'allow' };
+  }
+};
+
+export const POST_TOOL_USE_HOOK: HookDefinition = {
+  name: 'PostToolUse',
+  mode: 'non-blocking',
+  description: 'Fires after a tool completes successfully',
+  priority: 40,
+  handler: async (ctx) => {
+    return { outcome: 'allow' };
+  }
+};
+
+export const PRE_COMPACT_HOOK: HookDefinition = {
+  name: 'PreCompact',
+  mode: 'blocking',
+  description: 'Fires before context compaction; can modify compaction behavior',
+  priority: 25,
+  handler: async (ctx) => {
+    return { outcome: 'allow' };
+  }
+};
+
+export const STOP_HOOK: HookDefinition = {
+  name: 'Stop',
+  mode: 'blocking',
+  description: 'Fires when a stop signal is received; can intercept or allow',
+  priority: 5,
+  handler: async (ctx) => {
+    return { outcome: 'allow' };
+  }
+};
+
+export const SUBAGENT_HOOK: HookDefinition = {
+  name: 'Subagent',
+  mode: 'non-blocking',
+  description: 'Fires when a subagent is spawned or receives a task',
+  priority: 35,
+  handler: async (ctx) => {
+    return { outcome: 'allow' };
+  }
+};
+
+export const SESSION_END_HOOK: HookDefinition = {
+  name: 'SessionEnd',
+  mode: 'non-blocking',
+  description: 'Fires when a session terminates',
+  priority: 90,
+  handler: async (ctx) => {
+    return { outcome: 'allow' };
+  }
+};
+
+export const NOTIFICATION_HOOK: HookDefinition = {
+  name: 'Notification',
+  mode: 'non-blocking',
+  description: 'Fires when an async notification is dispatched',
+  priority: 45,
+  handler: async (ctx) => {
+    return { outcome: 'allow' };
+  }
+};
+
+export const TASK_COMPLETED_HOOK: HookDefinition = {
+  name: 'TaskCompleted',
+  mode: 'non-blocking',
+  description: 'Fires when a task reaches a terminal state',
+  priority: 55,
+  handler: async (ctx) => {
+    return { outcome: 'allow' };
+  }
+};
+
+export const POST_TOOL_USE_FAILURE_HOOK: HookDefinition = {
+  name: 'PostToolUseFailure',
+  mode: 'non-blocking',
+  description: 'Fires after a tool invocation fails',
+  priority: 42,
+  handler: async (ctx) => {
+    return { outcome: 'diagnostic' };
+  }
+};
+
+export const PRE_LLM_CONTEXT_HOOK: HookDefinition = {
+  name: 'PreLlmContext',
+  mode: 'non-blocking',
+  description: 'Fires before LLM context is assembled; can inspect or enrich',
+  priority: 15,
+  handler: async (ctx) => {
+    return { outcome: 'allow' };
+  }
+};
+
+// Predefined hook definitions map for bulk registration
+export const LIFECYCLE_HOOKS: HookDefinition[] = [
+  SESSION_START_HOOK,
+  USER_PROMPT_SUBMIT_HOOK,
+  PRE_TOOL_USE_HOOK,
+  POST_TOOL_USE_HOOK,
+  PRE_COMPACT_HOOK,
+  STOP_HOOK,
+  SUBAGENT_HOOK,
+  SESSION_END_HOOK,
+  NOTIFICATION_HOOK,
+  TASK_COMPLETED_HOOK,
+  POST_TOOL_USE_FAILURE_HOOK,
+  PRE_LLM_CONTEXT_HOOK,
+];

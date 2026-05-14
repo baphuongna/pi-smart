@@ -11,6 +11,31 @@ import { formatWidgetData } from "../cost/widget.ts";
 import { getIntensityForBudgetState, getOutputAllowanceMultiplier, validateIntensity } from "../compress/intensity.ts";
 import { executeInSandbox } from "../analyze/sandbox.ts";
 import { registerSmartCommands } from "./register-commands.ts";
+import {
+  registerHook,
+  registerHooks,
+  LIFECYCLE_HOOKS,
+  SESSION_START_HOOK,
+  USER_PROMPT_SUBMIT_HOOK,
+  PRE_TOOL_USE_HOOK,
+  POST_TOOL_USE_HOOK,
+  PRE_COMPACT_HOOK,
+  STOP_HOOK,
+  SUBAGENT_HOOK,
+  SESSION_END_HOOK,
+  NOTIFICATION_HOOK,
+  TASK_COMPLETED_HOOK,
+  POST_TOOL_USE_FAILURE_HOOK,
+  PRE_LLM_CONTEXT_HOOK,
+  type HookName,
+  type HookContext,
+} from "../hooks/hook-system.ts";
+import {
+  GovernanceEngine,
+  DEFAULT_LIFECYCLE_POLICIES,
+  type GovernancePolicy,
+  type GovernableHook,
+} from "../hooks/governance.ts";
 
 interface SessionState {
 	config: ReturnType<typeof loadSmartConfig>;
