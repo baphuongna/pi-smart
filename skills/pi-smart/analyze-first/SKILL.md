@@ -122,3 +122,42 @@ memory_search({
 - Agent remembers "this file has complexity issues"
 - Skip re-analyzing known issues
 - Focus on new problems
+
+## Cross-Extension Integration
+
+### With pi-pipeline (Optimize Pipeline)
+
+```typescript
+// Analyze codebase
+analyze({ files: "src/**/*.ts", intent: "complexity" })
+
+// Optimize context
+smart_config({ action: "set", key: "focus", value: "complex-files" })
+
+// Run pipeline
+pipeline_verify()
+```
+
+### With pi-langsrv (Structure Analysis)
+
+```typescript
+// Get structure
+lsp_symbols({ file: "src/**/*.ts" })
+
+// Analyze
+analyze({ symbols: symbols, intent: "refactor" })
+```
+
+### With pi-recollect (Store Analysis)
+
+```typescript
+// Analyze code
+analyze({ files: "src/**/*.ts", intent: "patterns" })
+
+// Store patterns found
+memory_store({
+  category: "pattern",
+  title: "Complex functions found",
+  content: "3 functions with complexity > 15"
+})
+```
