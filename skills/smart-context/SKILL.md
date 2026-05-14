@@ -1,184 +1,106 @@
 ---
 name: smart-context
-description: Intelligent context aggregation with BM25 search, sandbox execution, and code indexing
+description: Intelligent context aggregation with BM25 search, token compression, and code indexing
 triggers:
   - analyze
   - smart context
   - what is the context
   - search context
   - code index
+  - optimize context
+  - token limit
 requirements:
-  tools: [read, write, bash]
-  context: [current project files]
+  tools: [analyze, smart_config]
+  context: [project files]
 ---
 
 # Smart Context Skill
 
 ## Objective
-Aggregate intelligent context from recent changes, code index, and decisions using BM25 search, sandbox execution, and fast code indexing.
+Optimize context management through intelligent compression, BM25 search, and code indexing.
+
+## Tools Available
+- `analyze` - Execute code in sandbox for data processing and analysis
+- `smart_config` - Get or set pi-smart runtime configuration
 
 ## When to Use
-- When user asks "what's the current context" or "analyze this code"
-- When you need to find relevant code across the project
-- When executing code analysis without multiple file reads
-- When searching for decisions or patterns
+- When context is getting too large
+- When you need to find relevant code quickly
+- When you want to optimize token usage
+- When searching for specific patterns in code
 
-## Workflow
+## Core Features
 
-### Step 1: Add Context
-```typescript
-// Add files to context
-smartContext.addFile('src/api.ts', fileContent);
+### 1. Analyze Tool
+Execute code without using tool calls:
 
-// Add decisions
-smartContext.addDecision('Use JWT for auth', 'More scalable than sessions');
-
-// Add errors
-smartContext.addError('TypeError: Cannot read property', 'When calling user.getName()');
+```
+analyze({
+  language: "javascript",
+  code: "...",
+  intent: "what we're looking for"
+})
 ```
 
-### Step 2: Query Context
-```typescript
-// Natural language query
-const result = await smartContext.query({ 
-  query: "authentication implementation" 
-});
+Use cases:
+- Count files, functions, lines
+- Find patterns in code
+- Calculate statistics
+- Filter and process data
 
-// Get recent entries
-const recent = smartContext.recent(10);
+### 2. Smart Config
+Configure pi-smart behavior:
 
-// Get only decisions
-const decisions = smartContext.decisions(5);
+```
+smart_config({ action: "get", key: "context.limit" })
+smart_config({ action: "set", key: "context.limit", value: 8000 })
 ```
 
-### Step 3: Execute Analysis
-```typescript
-// Run code in sandbox
-const result = await smartContext.execute(`
-  const symbols = ['auth', 'login', 'verify'];
-  symbols.filter(s => s.includes('auth'));
-`);
-
-// Analyze code structure
-const analysis = smartContext.analyze(code);
-// Returns: { functions, classes, imports, exports }
-```
-
-### Step 4: Index Codebase
-```typescript
-// Index project for fast lookup
-const index = new CodeIndex();
-await index.indexProject('/path/to/project');
-
-// Find definition
-const def = index.findDefinition('authenticate');
-// Returns: { name, type, file, line }
-
-// Find all references
-const refs = index.findReferences('authenticate');
-// Returns: all places where authenticate is used
-
-// Get call graph
-const graph = index.getCallGraph('processRequest');
-// Returns: { caller, callees: [...] }
-```
-
-## Output Format
-
-### Context Result
-```json
-{
-  "entries": [
-    {
-      "type": "decision",
-      "content": "Use JWT for authentication",
-      "timestamp": 1699999999999,
-      "source": "src/auth.ts"
-    }
-  ],
-  "tokens": 1250,
-  "sources": ["src/auth.ts", "src/api.ts"]
-}
-```
-
-### Code Index Result
-```json
-{
-  "symbols": [
-    {
-      "name": "authenticate",
-      "type": "function",
-      "file": "src/auth.ts",
-      "line": 42
-    }
-  ],
-  "callGraph": [...],
-  "files": 150,
-  "indexTime": 2340
-}
-```
+### 3. Token Compression
+When context exceeds limits:
+1. Analyze current context usage
+2. Identify compression opportunities
+3. Apply caveman-mode or custom rules
+4. Verify compression quality
 
 ## Examples
 
-### Query for Authentication
+### Count Functions
 ```
-User: What decisions have we made about authentication?
+analyze({ 
+  language: "javascript", 
+  code: "const fs=require('fs'); Object.keys(JSON.parse(fs.readFileSync('package.json','utf8')).dependencies).forEach(d=>console.log(d))",
+  intent: "list dependencies"
+})
+```
+
+### Find TODO Comments
+```
+analyze({ 
+  language: "shell", 
+  code: "grep -rn TODO src/ || true",
+  intent: "find TODO comments"
+})
+```
+
+### Optimize Context
+```
+User: Context is too large
 Agent:
-  const decisions = smartContext.decisions(10);
-  // Filter for auth-related
-  const authDecisions = decisions.entries.filter(
-    e => e.content.toLowerCase().includes('auth')
-  );
+  1. analyze({ language: "shell", code: "wc -c context.txt" })
+  2. smart_config({ action: "set", key: "compression.enabled", value: true })
 ```
 
-### Index and Search
-```
-User: Where is the authenticate function defined?
-Agent:
-  const def = codeIndex.findDefinition('authenticate');
-  // Returns location
-```
+## Configuration Keys
 
-### Sandbox Execution
-```
-User: Test this regex pattern: /^[a-z]+$/
-Agent:
-  const result = await smartContext.execute(`
-    const pattern = /^[a-z]+$/;
-    return {
-      test1: pattern.test('hello'),
-      test2: pattern.test('Hello123')
-    };
-  `);
-  // Returns: { test1: true, test2: false }
-```
+| Key | Description | Default |
+|-----|-------------|---------|
+| context.limit | Max context size in tokens | 10000 |
+| context.compression | Enable compression | true |
+| analyze.timeout | Analyze tool timeout (ms) | 5000 |
 
-## Performance
-
-- **Code Index**: Indexes ~1000 files in ~2 seconds
-- **BM25 Search**: Sub-millisecond for in-memory search
-- **Sandbox**: 5 second timeout, 128MB memory limit
-
-## Integration
-
-### With pi-recollect
-```typescript
-// Get memories from pi-recollect
-const memories = await pi_recollect_query({ query: "auth" });
-
-// Add to smart context
-for (const mem of memories) {
-  smartContext.add({
-    type: 'decision',
-    content: mem.value,
-    timestamp: mem.createdAt
-  });
-}
-```
-
-### With pi-langsrv
-```typescript
-// Use pi-langsrv for accurate symbol resolution
-const lsp = new LanguageIntelligence();
-const refs = await lsp.findReferences('authenticate', 'typescript');
-```
+## BM25 Search
+BM25-weighted full-text search for finding relevant code:
+- Used by memory_search
+- Weighted by term frequency
+- Includes proximity scoring

@@ -2,45 +2,41 @@
 
 ## Extension Purpose
 
-pi-smart provides context optimization, token compression, output filtering, and cost tracking for Pi coding agents. It helps manage context window usage and reduce costs.
+pi-smart provides intelligent context optimization, token compression, and code indexing for Pi coding agents.
 
 ## Source Of Truth
 
-1. `README.md` for extension overview.
-2. `docs/HARNESS.md` for the human-agent operating model.
-3. `docs/FEATURE_INTAKE.md` before turning any request into work.
-4. `docs/ARCHITECTURE.md` before proposing implementation changes.
-5. `docs/product/` for current product contracts.
-6. `docs/stories/` for story packets and backlog.
-7. `docs/TEST_MATRIX.md` for proof status.
-8. `docs/decisions/` for why important choices were made.
+1. `README.md` - Extension overview
+2. `skills/smart-context/SKILL.md` - Context optimization skill
+3. `skills/analyze-first/SKILL.md` - Data analysis skill
+4. `docs/HARNESS.md` - Operating model
+5. `docs/FEATURE_INTAKE.md` - Intake process
+6. `docs/product/` - Product contracts
+7. `docs/stories/` - Story packets
+8. `docs/TEST_MATRIX.md` - Proof status
+9. `docs/decisions/` - Decision records
 
 ## Extension Capabilities
 
 ### Core Tools
-- `smart_config` - Runtime configuration management
-- `analyze` - Write scripts to analyze data
-- `token_compressor` - Caveman-style compression
-- `output_filter` - Strip ANSI, collapse blanks, shorten paths
+- `analyze` - Execute code in sandbox for data processing
+- `smart_config` - Get or set pi-smart runtime configuration
 
-### Commands
-- `/smart-intensity` - Set compression intensity
-- `/smart-filters` - Configure output filters
-- `/smart-budget` - Set context budget thresholds
-- `/smart-cost` - Show cost tracking
+### Skills
+- `skills/smart-context/SKILL.md` - Context optimization, BM25 search, token compression
+- `skills/analyze-first/SKILL.md` - Analyze tool usage for data processing
+
+## When to Use This Extension
+
+- Context getting too large
+- Need to find relevant code quickly
+- Token optimization
+- Data analysis and counting
 
 ## Validation Commands
 
 ```bash
-npm test                    # Unit tests
-npm run lint               # Lint checks
-npx tsc --noEmit          # TypeScript type check
+npm test
+npm run lint
+npx tsc --noEmit
 ```
-
-## Done Definition
-
-A task is done when:
-- The requested change is completed or the blocker is documented.
-- Relevant docs, stories, and test matrix entries remain current.
-- Validation commands were run when they exist.
-- Missing harness capabilities were added to `docs/HARNESS_BACKLOG.md`.
