@@ -1,3 +1,10 @@
+/**
+ * Cost tracking with hardcoded pricing estimates.
+ * WARNING: Hardcoded prices become stale. Fetch from provider APIs for accurate pricing.
+ * This tracker uses estimates for display only — do not rely on these for budget enforcement
+ * without a freshness timestamp and periodic refresh from provider APIs.
+ */
+
 export interface Usage {
 	inputTokens: number;
 	outputTokens: number;

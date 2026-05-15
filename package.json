@@ -1,7 +1,7 @@
 {
   "name": "pi-smart",
-  "version": "0.4.19",
-  "description": "Extension for Pi coding agent",
+  "version": "0.4.20",
+  "description": "Extension for Pi coding agent - context optimization, sandbox, governance",
   "type": "module",
   "main": "./index.ts",
   "module": "./index.ts",
@@ -35,9 +35,7 @@
   "author": "BaphuongNA",
   "license": "MIT",
   "repository": "https://github.com/baphuongna/pi-smart",
-  "dependencies": {
-    "vm2": "^3.9.19"
-  },
+  "note": "vm2 removed - using native Node.js vm module for sandbox (CVE-2023-37466 fix)",
   "peerDependencies": {
     "typescript": "^5.0.0",
     "@earendil-works/pi-coding-agent": ">=0.73.0"

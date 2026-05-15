@@ -37,7 +37,7 @@ export function memoize<T extends (...args: unknown[]) => unknown>(
       return entry.value;
     }
 
-    const result = fn(...args);
+    const result = fn(...args) as ReturnType<T>;
     cache.set(key, { value: result, expiry: Date.now() + ttlMs });
 
     // Evict oldest if over capacity

@@ -1,5 +1,5 @@
-import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
-import { registerPiSmart } from "./src/extension/register.ts";
+import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
+import { registerPiSmart } from "./extension/register.ts";
 
 export default function (pi: ExtensionAPI): void {
 	registerPiSmart(pi);
@@ -12,4 +12,4 @@ export { createCorrectionDetector, CORRECTION_STRONG_PATTERNS, CORRECTION_WEAK_P
 export { createFailureInjector, type FailureEntry, type FailureInjectionConfig } from './memory/failure-injector.js';
 
 // Caveman compression exports
-export { compressCaveman, getCompressionStats, SHORTEN_MAP, PRESERVE_PATTERNS } from './compress/caveman-rules.js';
+export { compressCaveman, getCompressionStats, SHORTEN_MAP } from './compress/caveman-rules.js';

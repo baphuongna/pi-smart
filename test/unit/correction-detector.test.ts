@@ -1,6 +1,6 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert';
-import { createCorrectionDetector } from '../../src/analyze/correction-detector.js';
+import { createCorrectionDetector } from '../../src/analyze/correction-detector.ts';
 
 describe('Correction Detector', () => {
   it('detects strong correction patterns', () => {

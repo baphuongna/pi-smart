@@ -1,6 +1,6 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert';
-import { compressCaveman, getCompressionStats } from '../../src/compress/caveman-rules.js';
+import { compressCaveman, getCompressionStats } from '../../src/compress/caveman-rules.ts';
 
 describe('Caveman Compression', () => {
   it('removes filler words', () => {

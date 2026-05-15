@@ -3,9 +3,14 @@
  * 
  * Injects recent failure memories into system context
  * so the AI learns from past mistakes proactively.
+ * 
+ * NOTE: This is exported for advanced use but not auto-wired.
+ * To use: createFailureInjector({ getMemories: (cat) => [...] })
+ * See Bug #15 in EXTENSION_UPGRADE_PLAN.md
  */
 
-import type { MemoryCategory } from '../types.js';
+/** Memory category types */
+export type MemoryCategory = 'failure' | 'correction' | 'insight' | 'tool-quirk' | 'decision' | 'context';
 
 export interface FailureEntry {
   id: string;

@@ -121,14 +121,14 @@ export function createDecision(input: CreateDecisionInput): DecisionRecord {
  * Get a human-readable summary of a decision record.
  */
 export function formatDecisionSummary(record: DecisionRecord): string {
-	const lines: string[] = [
+	const lines: (string | undefined)[] = [
 		`# Decision Record: ${record.title}`,
 		``,
 		`**ID**: ${record.id}`,
 		`**Status**: ${record.status}`,
 		`**Created**: ${record.createdAt}`,
-		record.reviewedAt ? `**Reviewed**: ${record.reviewedAt}` : null,
-		record.supersededBy ? `**Superseded By**: ${record.supersededBy}` : null,
+		record.reviewedAt ? `**Reviewed**: ${record.reviewedAt}` : undefined,
+		record.supersededBy ? `**Superseded By**: ${record.supersededBy}` : undefined,
 		``,
 		`## Context`,
 		record.context,

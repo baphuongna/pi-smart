@@ -1,4 +1,5 @@
-import type { ExtensionAPI, ExtensionContext, ToolDefinition } from "@mariozechner/pi-coding-agent";
+import type { ExtensionAPI, ExtensionContext, ToolDefinition } from "@earendil-works/pi-coding-agent";
+import { compressByIntensity } from "../compress/caveman.ts";
 import type { Intensity, BudgetState } from "../config.ts";
 import { loadSmartConfig } from "../config.ts";
 import { applyPipeline } from "../filter/pipeline.ts";
@@ -102,8 +103,7 @@ export function registerPiSmart(pi: ExtensionAPI): void {
 		if (textParts.length === 0) return;
 		const rawText = textParts.join("");
 		// Apply caveman compression based on intensity
-		const { compress } = { compress: (t: string, i: string) => t };
-		const compressed = rawText; // compression applied by compress module
+		const { text: compressed } = compressByIntensity(rawText, state.intensity);
 		if (compressed !== rawText) {
 			msg.message.content = [{ type: "text", text: compressed }];
 		}
@@ -138,9 +138,9 @@ export function registerPiSmart(pi: ExtensionAPI): void {
 			state.costTracker.trackBytesFiltered(metrics.bytesIn - metrics.bytesOut);
 
 			if (result !== rawText) {
-				return {
-					content: [{ type: "text", text: result }],
-				} as unknown as undefined;
+				// Return modified content to replace the tool result
+				// Pi core will merge/replace based on its hook contract
+				return { content: [{ type: "text", text: result }] };
 			}
 		});
 	} catch {

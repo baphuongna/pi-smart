@@ -11,7 +11,7 @@ import {
   formatCompression,
   recommendLevel,
   type CavemanLevel,
-} from '../../src/compress/caveman-mode.js';
+} from '../../src/compress/caveman-mode.ts';
 
 describe('CavemanMode', () => {
   describe('compressText', () => {

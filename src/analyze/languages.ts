@@ -73,10 +73,31 @@ export function getLanguageConfig(language: string): LanguageConfig | null {
 }
 
 export function sanitizeEnvironment(baseEnv: NodeJS.ProcessEnv, languageConfig: LanguageConfig): NodeJS.ProcessEnv {
-	const clean: NodeJS.ProcessEnv = { ...baseEnv };
-	const toStrip = new Set([...DANGEROUS_ENV_VARS, ...languageConfig.envStrip]);
-	for (const key of toStrip) {
-		delete clean[key];
+	// Allowlist approach: build a clean env from scratch with only known-safe variables.
+	// This is more secure than denylisting dangerous vars (which can miss new attack vectors).
+	const ALLOWED_VARS: (keyof NodeJS.ProcessEnv)[] = [
+		'PATH', 'HOME', 'USER', 'SHELL', 'TERM', 'LANG', 'DBUS_SESSION_BUS_ADDRESS', 'XDG_RUNTIME_DIR',
+		'TMPDIR', 'TEMP', 'TMP',
+		'PI_SANDBOX_LANGUAGE',
+		'npm_config_local_address',
+	];
+
+	// Additional per-language safe vars
+	const perLangAllowed: (keyof NodeJS.ProcessEnv)[] = [];
+	if (languageConfig.command.includes('node') || languageConfig.command.includes('python3')) {
+		perLangAllowed.push(
+			'npm_config_cache', 'npm_config_prefix',
+			'PIP_CACHE_DIR', 'PIP_INDEX_URL',
+		);
 	}
+
+	const allowed = new Set([...ALLOWED_VARS, ...perLangAllowed]);
+	const clean: NodeJS.ProcessEnv = {};
+	for (const key of allowed) {
+		if (baseEnv[key] !== undefined) {
+			clean[key] = baseEnv[key];
+		}
+	}
+
 	return clean;
 }

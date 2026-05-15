@@ -4,6 +4,7 @@
  * Pattern from: pi-audit/src/governance/policy.ts (design intent)
  */
 
+import { randomUUID } from 'node:crypto';
 import type { HookName, HookContext, HookResult, HookOutcome } from './hook-system.ts';
 
 /**
@@ -191,7 +192,7 @@ export class GovernanceEngine {
     result: HookResult
   ): void {
     const entry: GovernanceAuditEntry = {
-      id: `gov_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`,
+      id: `gov_${randomUUID()}`,
       eventType,
       hookName,
       timestamp: Date.now(),
@@ -326,12 +327,12 @@ export const DEFAULT_LIFECYCLE_POLICIES: GovernancePolicy[] = [
 /**
  * Create a governed hook by wrapping a base hook with governance enforcement
  */
-export function governHook<T extends { name: HookName; handler: (ctx: HookContext) => HookResult | Promise<HookResult> }>(
+export function governHook<T extends { name: HookName; mode?: string; handler: (ctx: HookContext) => HookResult | Promise<HookResult> }>(
   baseHook: T,
   policy: GovernancePolicy
 ): GovernableHook {
   return {
-    baseHook,
+    baseHook: baseHook as T & { mode: 'blocking' | 'non-blocking' },
     policy,
     requiresConsent: policy.requireConsent
   };

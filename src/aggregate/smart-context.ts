@@ -3,14 +3,15 @@
  * Combines recent changes, code index, and decisions into unified context
  */
 
-import { BM25Search, type SearchResult } from '../search/bm25';
-import { ContextSandbox } from '../sandbox/sandbox';
+import { BM25Search, type SearchResult } from '../search/bm25.ts';
+import { ContextSandbox } from '../sandbox/sandbox.ts';
 
 export interface ContextEntry {
   type: 'file' | 'change' | 'decision' | 'error' | 'output';
   content: string;
   timestamp: number;
   source?: string;
+  [key: string]: unknown;
 }
 
 export interface SmartContextQuery {

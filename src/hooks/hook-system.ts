@@ -244,7 +244,7 @@ export function createHookLogger(
   onLog?: (report: HookExecutionReport) => void
 ): HookEventLogger {
   return {
-    log(report: HookEventLogger) {
+    log(report: HookExecutionReport) {
       if (onLog) {
         onLog(report);
       } else {
