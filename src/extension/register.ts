@@ -1,5 +1,6 @@
 import type { ExtensionAPI, ExtensionContext, ToolDefinition } from "@earendil-works/pi-coding-agent";
 import { compressByIntensity } from "../compress/caveman.ts";
+import { TokenCompressor } from "../compress/token-compressor.ts";
 import type { Intensity, BudgetState } from "../config.ts";
 import { loadSmartConfig } from "../config.ts";
 import { applyPipeline } from "../filter/pipeline.ts";
@@ -10,7 +11,12 @@ import { CostTracker } from "../cost/tracker.ts";
 import { PricingDatabase } from "../cost/pricing.ts";
 import { formatWidgetData } from "../cost/widget.ts";
 import { getIntensityForBudgetState, getOutputAllowanceMultiplier, validateIntensity } from "../compress/intensity.ts";
+
 import { executeInSandbox } from "../analyze/sandbox.ts";
+
+// Module-level TokenCompressor for command-specific output compression
+// Provides 60-90% savings on git/npm/ls/grep commands (vs 20-40% generic filter)
+const tokenCompressor = new TokenCompressor();
 import { registerSmartCommands } from "./register-commands.ts";
 import {
   registerHook,
@@ -136,6 +142,14 @@ export function registerPiSmart(pi: ExtensionAPI): void {
 			state.totalBytesIn += metrics.bytesIn;
 			state.totalBytesOut += metrics.bytesOut;
 			state.costTracker.trackBytesFiltered(metrics.bytesIn - metrics.bytesOut);
+
+			// Wire TokenCompressor for command-specific compression (60-90% savings)
+			// Runs after generic pipeline — uses detectType() for auto-detection
+			const tcResult = tokenCompressor.compress(result, tokenCompressor.detectType(result, command));
+			if (tcResult.savings > 20 && tcResult.compressed.length < result.length) {
+				state.totalBytesOut += result.length - tcResult.compressed.length;
+				return { content: [{ type: "text", text: tcResult.compressed }] };
+			}
 
 			if (result !== rawText) {
 				// Return modified content to replace the tool result
