@@ -2,6 +2,8 @@ import type { ExtensionAPI, ExtensionCommandContext } from "@earendil-works/pi-c
 import type { Intensity } from "../config.ts";
 import type { SessionCost } from "../cost/tracker.ts";
 import { formatDetailedCost, formatWidgetString, formatWidgetData } from "../cost/widget.ts";
+import { TokenCompressor } from "../compress/token-compressor.ts";
+import { compressByIntensity } from "../compress/caveman.ts";
 
 interface SessionState {
 	intensity: Intensity;
@@ -26,7 +28,7 @@ export function registerSmartCommands(pi: ExtensionAPI, deps: SmartCommandDeps):
 
 	pi.registerCommand("smart", {
 		description: "pi-smart status and configuration",
-			handler: async (args: string, _ctx: ExtensionCommandContext): Promise<void> => {
+		handler: async (args: string, _ctx: ExtensionCommandContext): Promise<void> => {
 			const state = getState();
 			const cost = getCostSummary();
 			const arg = args?.trim().split(/\s+/)[0];
@@ -67,6 +69,37 @@ export function registerSmartCommands(pi: ExtensionAPI, deps: SmartCommandDeps):
 				"",
 				"Usage: /smart terse|normal|verbose | /smart cost | /smart filters",
 			].join("\n"));
+		},
+	});
+
+	pi.registerCommand("compress", {
+		description: "Compress text or command output using caveman or command-specific mode",
+		handler: async (args: string, _ctx: ExtensionCommandContext): Promise<void> => {
+			if (!args?.trim()) {
+				console.log("Usage: /compress <text> or /compress --git-status|git-diff|ls|grep <output>");
+				return;
+			}
+			const compressor = new TokenCompressor();
+			const parts = args.trim().match(/^(--(\w+))?\s+(.*)$/s);
+			const type = parts?.[2] as "git-status" | "git-diff" | "ls" | "grep" | undefined;
+			const text = parts?.[3] || args;
+
+			if (type) {
+				const result = compressor.compress(text, type);
+				console.log(result.compressed);
+				console.log(`\n// ${result.savings}% reduction (${result.originalLines}→${result.compressedLines} lines, ${result.technique})`);
+			} else {
+				const detected = compressor.detectType(text);
+				const result = compressor.compress(text, detected);
+				if (result.savings > 10) {
+					console.log(result.compressed);
+					console.log(`\n// ${result.savings}% reduction (${result.originalLines}→${result.compressedLines} lines, ${result.technique})`);
+				} else {
+					const { text: caveman } = compressByIntensity(text, "normal");
+					console.log(caveman);
+					console.log(`\n// ${Math.round((1 - caveman.length / text.length) * 100)}% reduction (caveman)`);
+				}
+			}
 		},
 	});
 }
