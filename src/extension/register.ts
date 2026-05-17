@@ -1,4 +1,5 @@
 import type { ExtensionAPI, ExtensionContext, ToolDefinition } from "@earendil-works/pi-coding-agent";
+import { visual_update_progress } from "@earendil-works/pi-coding-agent";
 import { compressByIntensity } from "../compress/caveman.ts";
 import { TokenCompressor } from "../compress/token-compressor.ts";
 import type { Intensity, BudgetState } from "../config.ts";
