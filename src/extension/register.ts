@@ -247,12 +247,14 @@ INSTEAD: analyze({ language: "javascript", code: "..." })`,
 			const allowNetwork = (p.allowNetwork as boolean | undefined) ?? state.config.analyze.allowNetwork;
 
 			// Show progress
-			await visual_update_progress({
-				total: 1,
-				completed: 0,
-				currentTask: `Running ${language} analysis...`,
-				phase: "analyze",
-			});
+			try {
+				await visual_update_progress({
+					total: 1,
+					completed: 0,
+					currentTask: `Running ${language} analysis...`,
+					phase: "analyze",
+				});
+			} catch { /* ignore visual errors */ }
 
 			const result = await executeInSandbox({
 				language,
@@ -276,12 +278,14 @@ INSTEAD: analyze({ language: "javascript", code: "..." })`,
 				: "";
 
 			// Update progress to complete
-			await visual_update_progress({
-				total: 1,
-				completed: 1,
-				currentTask: "Analysis complete",
-				phase: "analyze",
-			});
+			try {
+				await visual_update_progress({
+					total: 1,
+					completed: 1,
+					currentTask: "Analysis complete",
+					phase: "analyze",
+				});
+			} catch { /* ignore visual errors */ }
 
 			return {
 				content: [{ type: "text" as const, text: result.stdout + summary }],
