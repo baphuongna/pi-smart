@@ -3,7 +3,7 @@
  * Combines recent changes, code index, and decisions into unified context
  */
 
-import { BM25Search, type SearchResult } from '../search/bm25.ts';
+import { BM25Search } from '../search/bm25.ts';
 import { ContextSandbox } from '../sandbox/sandbox.ts';
 
 export interface ContextEntry {

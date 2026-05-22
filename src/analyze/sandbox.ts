@@ -25,7 +25,6 @@ export interface SandboxOptions {
 
 const DEFAULT_TIMEOUT = 30000;
 const DEFAULT_MAX_OUTPUT = 5120;
-const DEFAULT_MAX_RSS = 256 * 1024 * 1024; // 256MB
 
 export async function executeInSandbox(options: SandboxOptions): Promise<SandboxResult> {
 	const langConfig = getLanguageConfig(options.language);

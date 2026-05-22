@@ -26,8 +26,6 @@ const REVIEW_TERMS = ["review", "audit", "security", "vulnerability", "diff", "p
 const RESEARCH_TERMS = ["research", "investigate", "compare", "analyze", "find", "trace"];
 const FAST_FIX_TERMS = ["quick fix", "fast-fix", "small bug", "typo", "one-line"];
 const COMPLEX_TERMS = ["migration", "refactor", "multiple", "parallel", "concurrent"];
-const SIMPLE_TERMS = ["fix", "add", "update", "remove", "sửa", "thêm"];
-
 const NUMBERED_LINE_RE = /^\s*\d+[.)]\s+(.+)$/;
 const BULLETED_LINE_RE = /^\s*[-*•]\s+(.+)$/;
 const CONJUNCTION_RE = /\s+(?:and|,)\s+/i;

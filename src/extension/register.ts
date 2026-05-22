@@ -1,5 +1,4 @@
 import type { ExtensionAPI, ExtensionContext, ToolDefinition } from "@earendil-works/pi-coding-agent";
-import { visual_update_progress } from "@earendil-works/pi-coding-agent";
 import { compressByIntensity } from "../compress/caveman.ts";
 import { TokenCompressor } from "../compress/token-compressor.ts";
 import type { Intensity, BudgetState } from "../config.ts";
@@ -10,7 +9,6 @@ import { computeBudgetState, getSteeringMessage, shouldAutoCompact } from "../bu
 import { calculatePercentage } from "../budget/tracker.ts";
 import { CostTracker } from "../cost/tracker.ts";
 import { PricingDatabase } from "../cost/pricing.ts";
-import { formatWidgetData } from "../cost/widget.ts";
 import { getIntensityForBudgetState, getOutputAllowanceMultiplier, validateIntensity } from "../compress/intensity.ts";
 
 import { executeInSandbox } from "../analyze/sandbox.ts";
@@ -246,16 +244,6 @@ INSTEAD: analyze({ language: "javascript", code: "..." })`,
 			const maxOutputBytes = (p.maxOutputBytes as number | undefined) ?? state.config.analyze.maxOutputBytes;
 			const allowNetwork = (p.allowNetwork as boolean | undefined) ?? state.config.analyze.allowNetwork;
 
-			// Show progress
-			try {
-				await visual_update_progress({
-					total: 1,
-					completed: 0,
-					currentTask: `Running ${language} analysis...`,
-					phase: "analyze",
-				});
-			} catch { /* ignore visual errors */ }
-
 			const result = await executeInSandbox({
 				language,
 				code,
@@ -276,16 +264,6 @@ INSTEAD: analyze({ language: "javascript", code: "..." })`,
 			const summary = result.bytesProcessed > result.bytesReturned
 				? `\n[pi-smart: ${result.bytesProcessed} bytes → ${result.bytesReturned} bytes, ${Math.round((1 - result.bytesReturned / (result.bytesProcessed || 1)) * 100)}% reduction]`
 				: "";
-
-			// Update progress to complete
-			try {
-				await visual_update_progress({
-					total: 1,
-					completed: 1,
-					currentTask: "Analysis complete",
-					phase: "analyze",
-				});
-			} catch { /* ignore visual errors */ }
 
 			return {
 				content: [{ type: "text" as const, text: result.stdout + summary }],
