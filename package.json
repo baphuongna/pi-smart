@@ -1,6 +1,6 @@
 {
   "name": "pi-smart",
-  "version": "0.4.23",
+  "version": "0.4.24",
   "description": "Extension for Pi coding agent - context optimization, sandbox, governance",
   "type": "module",
   "main": "./index.ts",
