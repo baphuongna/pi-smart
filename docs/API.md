@@ -1,97 +1,152 @@
 # pi-smart API Reference
 
-## Goal Analyzer
+## Extension Setup
 
 ```typescript
-import { analyzeGoal } from 'pi-smart';
+import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
+import { registerPiSmart } from "pi-smart";
 
-const result = analyzeGoal('Implement user authentication with JWT');
-
-console.log(result.intent);      // 'implement'
-console.log(result.complexity); // 'medium' | 'high' | 'low'
-console.log(result.roles);      // ['executor', 'reviewer']
-console.log(result.suggestions); // ['security-reviewer']
+export default function (pi: ExtensionAPI): void {
+  registerPiSmart(pi);
+}
 ```
 
-## Caveman Mode (Token Compression)
+## Tools
+
+The extension registers the following tools when loaded:
+
+### analyze
+
+Execute code in a sandboxed environment for data analysis.
 
 ```typescript
-import { compressText, shouldCompress, formatCompression } from 'pi-smart';
+// Parameters
+{
+  language: "javascript" | "typescript" | "python" | "shell";
+  code: string;
+  intent?: string;           // Optional: what we're looking for
+  maxOutputBytes?: number;   // Default: 5120
+  allowNetwork?: boolean;   // Default: false
+}
 
-// Compress text
-const result = compressText(
-  "I would recommend using useMemo for performance optimization",
-  "full"
-);
-
-console.log(result.compressed);  // "use useMemo for optimization"
-console.log(result.ratio);      // ~50
-
-// Check if worth compressing
-shouldCompress("long text here...", 100);  // true
-
-// Format for display
-formatCompression(result);
-// "Original: 50 chars → Compressed: 25 chars (50% reduction)"
+// Returns
+{
+  content: [{ type: "text", text: string }];
+  details: { bytesProcessed: number; bytesReturned: number };
+}
 ```
 
-## Translation (I18n)
+### smart_config
+
+Get or set pi-smart runtime configuration.
 
 ```typescript
-import { t, setLocale, getLocale, getAvailableLocales } from 'pi-smart';
+// Parameters
+{
+  action: "get" | "set" | "reset";
+  key: string;
+  value?: any;  // For 'set' action
+}
 
-// Set locale
-setLocale('vi');  // Vietnamese
+// Supported keys for 'get':
+// - intensity           Returns: "terse" | "normal" | "verbose"
+// - filters.enabled     Returns: "true" | "false"
+// - budget.thresholds   Returns: JSON object
 
-// Translate
-t('greeting');           // "Xin chào"
-t('errors.notFound');   // "Không tìm thấy"
-t('count.items', { n: 5 });  // "5 mục"
-
-// Get current locale
-getLocale();  // "vi"
-
-// List available locales
-getAvailableLocales();  // ['en', 'es', 'fr', 'pt-BR', 'vi']
+// Supported keys for 'set':
+// - intensity           Values: "terse", "normal", "verbose"
+// - filters.enabled     Values: true, false
 ```
 
-## BM25 Search
+## Hooks
 
-```typescript
-import { createBM25Search } from 'pi-smart';
+pi-smart integrates with the following hooks:
 
-const search = createBM25Search();
+| Hook | Purpose |
+| --- | --- |
+| `session_start` | Initialize config, cost tracker, budget state |
+| `session_shutdown` | Clean up session state |
+| `message_end` | Compress assistant responses |
+| `tool_result` | Filter tool output |
+| `turn_end` | Check budget and auto-compact |
+| `before_agent_start` | Inject steering messages |
+| `pre_task`, `post_task` | Task lifecycle (via hook system) |
 
-// Index documents
-search.index('doc1', 'TypeScript is a typed language');
-search.index('doc2', 'JavaScript is dynamic');
+## Configuration
 
-// Search
-const results = search.search('typed language');
-// [{ docId: 'doc1', score: 0.85 }, ...]
-```
+Configuration is loaded from `.pi-smart.json` in the project root:
 
-## Hook System
-
-```typescript
-import { createHookSystem, HookType } from 'pi-smart';
-
-const hooks = createHookSystem();
-
-// Register hook
-hooks.register('pre-task', async (task) => {
-  console.log('Starting:', task);
-  return task;
-});
-
-// Register blocking hook
-hooks.register('pre-commit', async (commit) => {
-  if (!commit.message) {
-    throw new Error('Commit message required');
+```json
+{
+  "enabled": true,
+  "compression": {
+    "enabled": true,
+    "intensity": "normal",
+    "autoIntensify": true
+  },
+  "filters": {
+    "enabled": true
+  },
+  "budget": {
+    "enabled": true,
+    "thresholds": {
+      "high": 0.6,
+      "critical": 0.8,
+      "emergency": 0.95
+    }
+  },
+  "cost": {
+    "showWidget": false
+  },
+  "analyze": {
+    "enabled": true,
+    "maxOutputBytes": 5120,
+    "allowNetwork": false,
+    "timeout": 30000
   }
-  return commit;
-}, { blocking: true });
+}
+```
 
-// Trigger
-await hooks.trigger('pre-task', { name: 'test' });
+## Internal Modules
+
+These are available for internal use but not part of the public API:
+
+### Token Compressor
+
+```typescript
+import { compressByIntensity, TokenCompressor } from "pi-smart/src/compress/caveman";
+```
+
+### Output Filters
+
+```typescript
+import { applyPipeline } from "pi-smart/src/filter/pipeline";
+import { resolveProfile } from "pi-smart/src/filter/config";
+```
+
+### Budget Management
+
+```typescript
+import { computeBudgetState, getSteeringMessage, shouldAutoCompact } from "pi-smart/src/budget/state-machine";
+import { calculatePercentage } from "pi-smart/src/budget/tracker";
+```
+
+### Hook System
+
+```typescript
+import { createHookSystem, LIFECYCLE_HOOKS, type HookName } from "pi-smart/src/hooks/hook-system";
+```
+
+### Sandbox
+
+```typescript
+import { executeInSandbox } from "pi-smart/src/analyze/sandbox";
+```
+
+## Events
+
+pi-smart emits the following events via the event bus:
+
+```typescript
+// See src/events/event-bus.ts for full event definitions
 ```

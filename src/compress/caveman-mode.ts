@@ -1,5 +1,10 @@
 /**
- * Caveman Mode - Token Compression Pattern
+ * Caveman Mode - Token Compression Pattern (DEPRECATED)
+ * 
+ * DEPRECATED: Use `caveman.ts` for intensity-based compression or
+ * `caveman-rules.ts` for rules-based compression instead.
+ * 
+ * This module is kept for backward compatibility but may be removed in future versions.
  * 
  * "why use many token when few do trick"
  * ~75% token reduction with full technical accuracy
